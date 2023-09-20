@@ -24,6 +24,17 @@ public class LibradyTest {
         Assertions.assertTrue(library.getItems().contains(book));
         Assertions.assertTrue(library.getItems().contains(newspaper));
         Assertions.assertTrue(library.getItems().contains(article));
+
+        Author author = new Author("Someone", "telephone", "someone@sth.com");
+        Item article2 = new Article("Article with 3 parts", author);
+        Item book2 = new Book("Book with 3 parts", author);
+
+        library.addToStock(article2);
+        library.addToStock(book2);
+
+        Assertions.assertEquals(5, library.getItems().size());
+        Assertions.assertTrue(library.getItems().contains(book2));
+        Assertions.assertTrue(library.getItems().contains(article2));
     }
 
     @Test
@@ -43,6 +54,20 @@ public class LibradyTest {
 
         book.setOnLoan(true);
         Assertions.assertEquals("item has been checked in", library.checkInItem("Book"));
+
+        Author author = new Author("Someone", "telephone", "someone@sth.com");
+        Item article2 = new Article("Article with 3 parts", author);
+        Item book2 = new Book("Book with 3 parts", author);
+
+        library.addToStock(article2);
+        library.addToStock(book2);
+
+        Assertions.assertEquals("item is not part of the library's collection", library.checkInItem("Newspaper with 3 parts"));
+        Assertions.assertEquals("item is not currently on loan", library.checkInItem("Article with 3 parts"));
+        Assertions.assertEquals("item is not currently on loan", library.checkInItem("Book with 3 parts"));
+
+        article2.setOnLoan(true);
+        Assertions.assertEquals("item has been checked in", library.checkInItem("Article with 3 parts"));
     }
 
     @Test
@@ -62,5 +87,19 @@ public class LibradyTest {
 
         book.setOnLoan(true);
         Assertions.assertEquals("item is currently on loan", library.checkOutItem("Book"));
+
+        Author author = new Author("Someone", "telephone", "someone@sth.com");
+        Item article2 = new Article("Article with 3 parts", author);
+        Item book2 = new Book("Book with 3 parts", author);
+
+        library.addToStock(article2);
+        library.addToStock(book2);
+
+        Assertions.assertEquals("item is not part of the library's collection", library.checkOutItem("Newspaper with 3 parts"));
+        Assertions.assertEquals("item has been checked out", library.checkOutItem("Article with 3 parts"));
+        Assertions.assertEquals("item has been checked out", library.checkOutItem("Book with 3 parts"));
+
+        article2.setOnLoan(true);
+        Assertions.assertEquals("item is currently on loan", library.checkOutItem("Article with 3 parts"));
     }
 }
